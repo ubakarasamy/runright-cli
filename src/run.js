@@ -1,3 +1,4 @@
+1
 import { api } from './api.js';
 import { pollStatus } from './poll.js';
 
@@ -15,7 +16,21 @@ export async function runCommand(options) {
 
   const final = await pollStatus(client, runId);
 
-  console.log(`✅ Finished with result: ${final.result}`);
+  console.log('\n📊 Test Summary');
+  console.log('------------------');
+  console.log(`Status  : ${final.status}`);
+  console.log(`Result  : ${final.result}`);
+
+  if (final.error) {
+    console.log(`❌ Error   : ${final.error}`);
+  }
+
+  if (final.logs?.length) {
+    console.log('\n🧾 Logs:');
+    final.logs.forEach((log, i) => {
+      console.log(` ${i + 1}. ${log.step} - ${log.message}`);
+    });
+  }
 
   if (final.result === 'passed') {
     process.exit(0);
